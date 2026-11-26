@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>CampusCare | Campus Complaint Portal</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="ui-polish.css">
+</head>
+
+<body>
+  <main id="homeScreen" class="home-screen">
+    <header class="home-header">
+      <a class="brand" href="#" aria-label="CampusCare home">
+        <span class="brand-mark">C</span>
+        <span><strong>CampusCare</strong><small>Campus support portal</small></span>
+      </a>
+      <span class="home-tagline">A better campus starts with being heard.</span>
+    </header>
+    <section class="home-content">
+      <div class="home-intro">
+        <div class="eyebrow">CAMPUS SUPPORT PORTAL</div>
+        <h1>Make your campus<br><span>better for everyone.</span></h1>
+        <p>Report campus issues, follow their progress, and help your college team create a better place to learn.</p>
+      </div>
+      <div class="portal-options">
+        <article class="portal-card">
+          <div class="portal-icon student-icon">S</div>
+          <h2>Student portal</h2>
+          <p>Submit a complaint and track updates on the issues you report.</p>
+          <div class="portal-actions">
+            <button class="btn btn-primary" data-auth-role="STUDENT" data-auth-mode="login">Student sign in</button>
+            <button class="portal-link" data-auth-role="STUDENT" data-auth-mode="register">Create student
+              account</button>
+          </div>
+        </article>
+        <article class="portal-card">
+          <div class="portal-icon admin-icon">A</div>
+          <h2>Admin portal</h2>
+          <p>Review campus reports, update their status, and manage complaints.</p>
+          <div class="portal-actions">
+            <button class="btn btn-primary" data-auth-role="ADMIN" data-auth-mode="login">Admin sign in</button>
+            <button class="portal-link" data-auth-role="ADMIN" data-auth-mode="register">Create admin account</button>
+          </div>
+        </article>
+      </div>
+      <div id="homeNotice" class="home-notice hidden" role="status"></div>
+    </section>
+    <footer class="home-footer">CampusCare <span>•</span> College Complaint Management System <span>•</span> Mini
+      project</footer>
+  </main>
+
+  <main id="authScreen" class="auth-screen hidden">
+    <section class="auth-card">
+      <a class="brand auth-brand" href="#" aria-label="CampusCare home">
+        <span class="brand-mark">C</span>
+        <span><strong>CampusCare</strong><small>Campus support portal</small></span>
+      </a>
+      <button id="backHome" type="button" class="auth-back">← Back to home</button>
+      <div class="auth-heading">
+        <div class="eyebrow">CAMPUS SUPPORT PORTAL</div>
+        <h1 id="authTitle">Welcome back</h1>
+        <p id="authDescription" class="muted">Sign in to access your CampusCare workspace.</p>
+      </div>
+      <div id="authNotice" class="auth-notice hidden" role="alert"></div>
+      <form id="loginForm" class="auth-form">
+        <label>Email address<input name="email" type="email" required maxlength="190" autocomplete="email"
+            placeholder="you@college.edu"></label>
+        <label>Password<input name="password" type="password" required autocomplete="current-password"
+            placeholder="Enter your password"></label>
+        <button type="submit" class="btn btn-primary auth-submit">Sign in</button>
+      </form>
+      <form id="registerForm" class="auth-form hidden">
+        <label>Full name<input name="name" required maxlength="100" autocomplete="name" placeholder="Your name"></label>
+        <label>Email address<input name="email" type="email" required maxlength="190" autocomplete="email"
+            placeholder="you@college.edu"></label>
+        <label>Password<input name="password" type="password" required minlength="8" maxlength="72" autocomplete="new-password"
+            placeholder="At least 8 characters"></label>
+        <label>Account type<select id="registerRole" name="role" required>
+            <option value="STUDENT">Student</option>
+            <option value="ADMIN">Admin</option>
+          </select></label>
+        <label id="adminCodeField" class="hidden">Admin registration code<input name="adminRegistrationCode"
+            type="password" autocomplete="off" placeholder="Enter your invite code"></label>
+        <button type="submit" class="btn btn-primary auth-submit">Create account</button>
+      </form>
+      <p class="auth-switch"><span id="authSwitchText">New to CampusCare?</span> <button id="authSwitch"
+          type="button">Create an account</button></p>
+    </section>
+  </main>
+
+  <div class="app-shell hidden">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="CampusCare home">
+        <span class="brand-mark">C</span>
+        <span><strong>CampusCare</strong><small>Campus support portal</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard</button>
+      <button class="nav-item" data-view="complaints"><span>☷</span> <span class="nav-label" id="complaintsNavText">My
+          complaints</span></button>
+      <button class="nav-item" id="newComplaintNav" data-view="new"><span>＋</span> Submit a complaint</button>
+      <div class="sidebar-bottom">
+        <div class="help-card"><span class="help-icon">✦</span><strong>Make campus better</strong>
+          <p>Small reports can lead to meaningful changes.</p>
+        </div>
+        <div class="api-state"><span id="apiDot" class="dot"></span><span id="apiState">Connecting to API…</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">CAMPUS OPERATIONS</div>
+          <h1 id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="top-actions">
+          <span id="userLabel" class="user-label"></span>
+          <div class="avatar" id="avatar">S</div>
+          <button id="logoutBtn" class="btn btn-quiet">Sign out</button>
+        </div>
+      </header>
+
+      <section id="notice" class="notice hidden" role="status"></section>
+
+      <section id="dashboardView" class="view">
+        <div class="welcome-row">
+          <div>
+            <h2 id="welcomeTitle">Student Dashboard</h2>
+            <p id="welcomeDescription" class="muted">Here’s what’s happening with your reports.</p>
+          </div><button class="btn btn-primary" id="quickNew">＋ New complaint</button>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-top"><span id="totalStatLabel">My complaints</span><span class="stat-icon purple">▤</span>
+            </div><strong id="totalCount">—</strong><small id="totalStatHint">Reports submitted by you</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Pending</span><span class="stat-icon amber">◷</span></div><strong
+              id="pendingCount">—</strong><small>Waiting for review</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>In progress</span><span class="stat-icon blue">↗</span></div><strong
+              id="progressCount">—</strong><small>Being worked on</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Resolved</span><span class="stat-icon green">✓</span></div><strong
+              id="resolvedCount">—</strong><small>Issues marked complete</small>
+          </article>
+        </div>
+        <div class="content-card">
+          <div class="card-heading">
+            <div>
+              <h3>Recent complaints</h3>
+              <p class="muted">Latest reports from your campus</p>
+            </div><button class="btn btn-quiet" data-go="complaints">View all →</button>
+          </div>
+          <div id="recentList" class="complaint-list">
+            <div class="loading">Loading complaints…</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="complaintsView" class="view hidden">
+        <div class="page-intro">
+          <div>
+            <h2 id="complaintsHeading">My complaints</h2>
+            <p id="complaintsDescription" class="muted">Track reports you have submitted.</p>
+          </div><button class="btn btn-primary" id="listNew">＋ New complaint</button>
+        </div>
+        <div class="filter-bar">
+          <label class="search-box"><span>⌕</span><input id="searchInput" type="search"
+              placeholder="Search title, location, description…"></label>
+          <select id="categoryFilter" aria-label="Filter category">
+            <option value="">All categories</option>
+          </select>
+          <select id="statusFilter" aria-label="Filter status">
+            <option value="">All statuses</option>
+          </select>
+        </div>
+        <div class="content-card">
+          <div id="allList" class="complaint-list">
+            <div class="loading">Loading complaints…</div>
+          </div>
+          <div class="pagination"><span id="pageInfo">Page 1</span>
+            <div><button id="prevPage" class="btn btn-quiet">← Previous</button><button id="nextPage"
+                class="btn btn-quiet">Next →</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="newView" class="view hidden">
+        <div class="page-intro">
+          <div>
+            <h2>Submit a complaint</h2>
+            <p class="muted">Share enough detail so the campus team can understand the issue.</p>
+          </div>
+        </div>
+        <div class="form-layout">
+          <form id="complaintForm" class="content-card complaint-form">
+            <div class="form-heading"><span class="form-icon">✎</span>
+              <div>
+                <h3>Complaint details</h3>
+                <p class="muted">Fields marked * are required.</p>
+              </div>
+            </div>
+            <label>Complaint title *<input name="title" required maxlength="120"
+                placeholder="e.g. Wi-Fi not working in library"></label>
+            <div class="form-row"><label>Category *<select name="category" id="formCategory" required>
+                  <option value="">Choose a category</option>
+                </select></label><label>Location *<input name="location" required maxlength="180"
+                  placeholder="e.g. Block B, Room 204"></label></div>
+            <label>Description *<textarea name="description" required maxlength="2000" rows="5"
+                placeholder="Explain what happened and when you noticed it…"></textarea><small class="field-help">Please
+                avoid sharing passwords or other sensitive personal information.</small></label>
+            <div class="form-actions"><button type="button" class="btn btn-quiet"
+                data-go="dashboard">Cancel</button><button type="submit" id="submitBtn" class="btn btn-primary">Submit
+                complaint →</button></div>
+          </form>
+          <aside class="tips-card">
+            <div class="tips-icon">✦</div>
+            <h3>Tips for a useful report</h3>
+            <ul>
+              <li>Choose the closest category.</li>
+              <li>Mention the exact building or room.</li>
+              <li>Describe the issue clearly.</li>
+              <li>Check the status later from All complaints.</li>
+            </ul>
+            <div class="privacy-note">CampusCare is a mini-project demo. Do not enter confidential information.</div>
+          </aside>
+        </div>
+      </section>
+
+      <footer>CampusCare <span>•</span> College Complaint Management System <span>•</span> Mini project</footer>
+    </main>
+  </div>
+
+  <dialog id="detailDialog" class="detail-dialog">
+    <div class="dialog-head">
+      <div><span class="eyebrow">COMPLAINT DETAILS</span>
+        <h2 id="detailTitle">Complaint</h2>
+      </div><button class="icon-btn" id="closeDialog" aria-label="Close">✕</button>
+    </div>
+    <div id="detailBody"></div>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+
+</html>
